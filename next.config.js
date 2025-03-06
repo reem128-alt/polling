@@ -13,7 +13,6 @@ const nextConfig = {
   // External packages configuration 
   serverExternalPackages: [],
   // Disable telemetry
-  distDir: '.next-custom',
 }
 
 module.exports = nextConfig
