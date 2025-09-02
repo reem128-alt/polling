@@ -95,7 +95,7 @@ export default function LoginForm() {
               <Input
                 id="username"
                 type="text"
-                placeholder="youremail@guru.com"
+                placeholder="admin"
                 className="w-full p-4 border border-gray-200 rounded-md bg-gray-50 text-right text-lg"
                 {...register("username", { required: "هذا الحقل مطلوب" })}
               />
@@ -112,7 +112,7 @@ export default function LoginForm() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="أدخل كلمة المرور"
+                  placeholder="admin"
                   className="w-full p-4 border border-gray-200 rounded-md bg-gray-50 text-right text-lg"
                   {...register("password", { required: "هذا الحقل مطلوب" })}
                 />
