@@ -12,6 +12,7 @@ import { clientPool, type ClientPoll, fetchPollById, type Poll } from "@/lib/ser
 import { useRouter, useSearchParams } from "next/navigation"
 import { MathExpression } from "@/components/MathExpression"
 import { Loader } from "@/components/ui/loader"
+import { toast } from "@/components/ui/toast"
 
 // Define step type alias
 type StepType = 1 | 2 | 3;
@@ -112,6 +113,11 @@ function SurveyContent() {
       } catch (err) {
         setError("فشل في تحميل الاستطلاع")
         console.error("Error loading poll:", err)
+        toast({
+          title: "تعذر تحميل الاستطلاع",
+          description: "يرجى التحقق من الرابط أو الاتصال وإعادة المحاولة.",
+          variant: "destructive",
+        })
       } finally {
         setLoading(false)
       }
@@ -190,6 +196,17 @@ function SurveyContent() {
       // Only proceed if there are no errors
       if (Object.keys(errors).length === 0) {
         setStep((step + 1) as StepType)
+        toast({
+          title: "تم حفظ بياناتك",
+          description: "يمكنك الانتقال الآن إلى الأسئلة.",
+          variant: "success",
+        })
+      } else {
+        toast({
+          title: "تحقق من الحقول المطلوبة",
+          description: "تأكد من إدخال جميع البيانات بشكل صحيح.",
+          variant: "destructive",
+        })
       }
     } else if (step === 2) {
       // Check if all questions have been answered
@@ -197,9 +214,19 @@ function SurveyContent() {
         setFormErrors({
           questions: "الرجاء الإجابة على جميع الأسئلة قبل المتابعة"
         })
+        toast({
+          title: "لم يتم الإجابة على كل الأسئلة",
+          description: "أجب على جميع الأسئلة للانتقال إلى الخطوة التالية.",
+          variant: "destructive",
+        })
       } else {
         setFormErrors({})
         setStep((step + 1) as StepType)
+        toast({
+          title: "رائع!",
+          description: "أكملت جميع الأسئلة ويمكنك إرسال الاستطلاع.",
+          variant: "success",
+        })
       }
     }
   }
@@ -222,16 +249,31 @@ function SurveyContent() {
       
       if (response.success) {
         setSubmitSuccess(true)
+        toast({
+          title: "تم إرسال الاستطلاع",
+          description: "شكرًا لمشاركتك، سيتم تحويلك للصفحة الرئيسية.",
+          variant: "success",
+        })
         // Optionally redirect or show success message
         setTimeout(() => {
           router.push('/')
         }, 3000)
       } else {
         setSubmitError(response.message || 'حدث خطأ أثناء إرسال البيانات')
+        toast({
+          title: "لم يتم الإرسال",
+          description: response.message || "حاول مرة أخرى لاحقًا.",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       console.error('Error submitting survey:', error)
       setSubmitError('حدث خطأ في الاتصال بالخادم')
+      toast({
+        title: "خطأ في الاتصال",
+        description: "تعذر إرسال الاستطلاع بسبب مشكلة في الشبكة.",
+        variant: "destructive",
+      })
     } finally {
       setIsSubmitting(false)
     }

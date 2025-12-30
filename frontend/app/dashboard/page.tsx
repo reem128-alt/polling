@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import PollForm from "@/components/pollForm"
 import { useRouter } from "next/navigation"
 import { Loader } from "@/components/ui/loader"
+import { toast } from "@/components/ui/toast"
 
 export default function Page() {
   const [polls, setPolls] = useState<Poll[]>([])
@@ -83,6 +84,11 @@ export default function Page() {
           }
         } catch (err) {
           console.error(`Error fetching solve data for poll ${poll._id}:`, err)
+          toast({
+            title: 'تعذر تحميل نتائج الاستطلاع',
+            description: 'حدث خطأ أثناء جلب النتائج، تمت تهيئة القيمة إلى 0.',
+            variant: 'destructive',
+          })
           results[poll._id] = 0
         }
       }
@@ -92,6 +98,11 @@ export default function Page() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('فشل في تحميل الاستطلاعات')
+      toast({
+        title: 'تعذر تحميل الاستطلاعات',
+        description: 'يرجى المحاولة مرة أخرى أو التحقق من الاتصال.',
+        variant: 'destructive',
+      })
     } finally {
       setLoading(false)
     }
@@ -195,11 +206,23 @@ export default function Page() {
           loadPolls();
         }, 500);
       }
+      toast({
+        title: isUpdating ? 'تم تحديث الاستطلاع' : 'تم إنشاء الاستطلاع',
+        description: isUpdating
+          ? 'تم تحديث بيانات الاستطلاع بنجاح.'
+          : 'تمت إضافة الاستطلاع الجديد ويمكنك إدارة أسئلته الآن.',
+        variant: 'success',
+      })
       setShowPollForm(false)
       setCurrentPoll(null)
       setIsUpdating(false)
     } catch (error) {
       console.error('Error saving poll:', error)
+      toast({
+        title: 'فشل حفظ الاستطلاع',
+        description: 'حدث خطأ أثناء حفظ الاستطلاع، حاول مرة أخرى.',
+        variant: 'destructive',
+      })
     } finally {
       setFormSubmitting(false)
     }
@@ -218,9 +241,19 @@ export default function Page() {
           delete newResults[pollId]
           return newResults
         })
+        toast({
+          title: 'تم حذف الاستطلاع',
+          description: 'تمت إزالة الاستطلاع بنجاح من النظام.',
+          variant: 'success',
+        })
       } catch (error) {
         console.error('Error deleting poll:', error)
         alert('حدث خطأ أثناء حذف الاستطلاع')
+        toast({
+          title: 'فشل حذف الاستطلاع',
+          description: 'تعذر حذف الاستطلاع، تأكد من الاتصال وحاول ثانية.',
+          variant: 'destructive',
+        })
       }
     }
   }
@@ -351,7 +384,7 @@ export default function Page() {
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6 p-3">
                 <h2 className="text-xl font-bold">الاستطلاعات</h2>
                 <div className="flex gap-2">
                  
@@ -391,34 +424,63 @@ export default function Page() {
                 <div className="rtl-table-wrapper min-w-max">
                   <table className="w-full divide-y divide-gray-200" dir="rtl">
                     <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الاسم</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">عدد الأسئلة</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النتيجة</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">وصف مبسط</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تفاصيل</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">حذف</th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تعديل</th>
+                      <tr className="bg-white">
+                        {[
+                          { label: 'الاسم', accent: 'from-[#009688]/20 to-transparent' },
+                          { label: 'عدد الأسئلة', accent: 'from-[#ff9800]/20 to-transparent' },
+                          { label: 'النتيجة', accent: 'from-[#4caf50]/20 to-transparent' },
+                          { label: 'وصف مبسط', accent: 'from-[#3f51b5]/20 to-transparent' },
+                          { label: 'تفاصيل', accent: 'from-[#00bcd4]/20 to-transparent' },
+                          { label: 'حذف', accent: 'from-[#f44336]/20 to-transparent' },
+                          { label: 'تعديل', accent: 'from-[#9c27b0]/20 to-transparent' },
+                        ].map((col, index) => (
+                          <th
+                            key={col.label}
+                            scope="col"
+                            className={`px-6 py-3 text-right text-xs font-semibold text-[#1e1e2d] uppercase tracking-wider`}
+                          >
+                            <div className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${col.accent} px-3 py-1 shadow-sm`}>
+                              <span className="w-6 h-6 rounded-full bg-white text-[#009688] text-xs font-bold flex items-center justify-center">
+                                {index + 1}
+                              </span>
+                              <span>{col.label}</span>
+                            </div>
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredPolls.map(poll => (
-                        <tr key={poll._id} className="border-b">
-                          <td className="py-4 flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-gray-200"></div>
-                            {poll.title}
+                        <tr key={poll._id} className="border-b hover:bg-gray-50 transition-colors">
+                          <td className="py-4 flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-full bg-gradient-to-r from-[#009688] to-[#1e1e2d] text-white flex items-center justify-center text-sm font-bold shadow-md">
+                              {poll.title?.[0] || 'س'}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-[#1e1e2d]">{poll.title}</p>
+                              <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#009688]"></span>
+                                معرف: {(poll._id ?? 'غير متاح').slice(-6)}
+                              </span>
+                            </div>
                           </td>
-                          <td className="py-4">{poll?.questions?.length}</td>
                           <td className="py-4">
-                            <div className="flex items-center gap-2">
-                              <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
-                              {pollResults[poll._id] !== undefined ? 
-                                <span>{pollResults[poll._id]} نقطة</span> : 
-                                <span>-</span>
-                              }
-                            </div>                      
+                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#009688]/10 text-[#00796b] text-sm font-medium shadow-sm">
+                              <span className="w-2.5 h-2.5 rounded-full bg-[#009688]"></span>
+                              {poll?.questions?.length ?? 0} سؤال
+                            </span>
                           </td>
-                          <td className="py-4">{poll.description}</td>
+                          <td className="py-4">
+                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4caf50]/10 text-[#2e7d32] text-sm font-medium shadow-sm">
+                              <span className="w-2.5 h-2.5 rounded-full bg-[#4caf50]"></span>
+                              {pollResults[poll._id] !== undefined ? `${pollResults[poll._id]} نقطة` : 'لم يتم التقييم'}
+                            </span>
+                          </td>
+                          <td className="py-4">
+                            <div className="max-w-xs text-sm text-gray-600 line-clamp-2">
+                              {poll.description}
+                            </div>
+                          </td>
                           <td className="py-4">
                             <button 
                               className="text-[#009688] hover:text-[#00796b] hover:underline"
@@ -430,20 +492,22 @@ export default function Page() {
                           <td className="py-4">
                             <div className="flex justify-center">
                               <button 
-                                className="text-red-500 hover:text-red-700"
+                                className="text-red-500 hover:text-red-700 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-sm font-medium shadow-sm"
                                 onClick={() => handleDeletePoll(poll._id)}
                               >
                                 <Trash2 className="h-5 w-5" />
+                                حذف
                               </button>
                             </div>
                           </td>
                           <td className="py-4">
                             <div className="flex justify-center">
                               <button 
-                                className="text-[#009688] hover:text-[#00796b]"
+                                className="text-[#009688] hover:text-[#00796b] inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#009688]/10 text-sm font-medium shadow-sm"
                                 onClick={() => handleUpdatePoll(poll)}
                               >
                                 <Pencil className="h-5 w-5" />
+                                تعديل
                               </button>
                             </div>
                           </td>

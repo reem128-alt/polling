@@ -12,6 +12,7 @@ import Link from "next/link"
 import { Modal } from "@/components/ui/modal"
 import QuestionForm from "@/components/questionForm"
 import { updateQuestion, createQuestion, deleteQuestion } from "@/lib/services/question";
+import { toast } from "@/components/ui/toast";
 
 
 // Create a client component that uses useSearchParams
@@ -58,6 +59,11 @@ function QuestionsContent() {
       } catch (err) {
         console.error('Error fetching poll:', err)
         setError('فشل في تحميل بيانات الاستطلاع')
+        toast({
+          title: 'تعذر تحميل الاستطلاع',
+          description: 'حدث خطأ أثناء تحميل البيانات، حاول مرة أخرى.',
+          variant: 'destructive',
+        })
       } finally {
         setLoading(false)
       }
@@ -106,6 +112,11 @@ function QuestionsContent() {
     try {
       setIsDeleting(true)
       await deleteQuestion(questionId)
+      toast({
+        title: 'تم حذف السؤال',
+        description: 'تمت إزالة السؤال بنجاح من الاستطلاع.',
+        variant: 'success',
+      })
       
       // Refresh poll data to show the updated questions list
       if (pollId) {
@@ -116,7 +127,11 @@ function QuestionsContent() {
      
     } catch (error) {
       console.error('Error deleting question:', error)
-      
+      toast({
+        title: 'فشل حذف السؤال',
+        description: 'حدث خطأ أثناء حذف السؤال، يرجى المحاولة لاحقًا.',
+        variant: 'destructive',
+      })
     } finally {
       setIsDeleting(false)
     }
@@ -138,6 +153,11 @@ function QuestionsContent() {
         };
         
         await createQuestion(cleanQuestionData)
+        toast({
+          title: 'تم إنشاء السؤال',
+          description: 'تمت إضافة السؤال الجديد بنجاح.',
+          variant: 'success',
+        })
        
       } else {
         // Update existing question
@@ -155,6 +175,11 @@ function QuestionsContent() {
         
         // Call the updated updateQuestion function with just the question ID
         await updateQuestion(currentQuestion._id, cleanQuestionData)
+        toast({
+          title: 'تم تحديث السؤال',
+          description: 'تم حفظ التعديلات بنجاح.',
+          variant: 'success',
+        })
        
       }
       
@@ -170,7 +195,11 @@ function QuestionsContent() {
       setIsCreatingQuestion(false)
     } catch (error) {
       console.error('Error saving question:', error)
-      
+      toast({
+        title: 'فشل حفظ السؤال',
+        description: 'حدث خطأ أثناء حفظ السؤال، حاول مرة أخرى.',
+        variant: 'destructive',
+      })
     }
   }
 
