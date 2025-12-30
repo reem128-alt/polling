@@ -300,8 +300,8 @@ function SurveyContent() {
         <header className="bg-white shadow-sm">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center py-4">
-              <div className="w-full max-w-3xl flex justify-between items-center">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+              <div className="w-full max-w-2xl flex items-center justify-center gap-4">
+                <div className="flex items-center gap-4 rtl:space-x-reverse rtl:space-x-0">
                   <div className={`flex flex-col items-center ${step >= 1 ? 'text-[#009688]' : 'text-gray-400'}`}>
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${step >= 1 ? 'border-[#009688] bg-[#e0f2f1]' : 'border-gray-200'}`}>
                       <span className="text-lg font-medium">1</span>
@@ -517,15 +517,15 @@ function SurveyContent() {
                     </div>
                   )}
                   {poll.questions.map((question, index) => (
-                    <div key={question._id} className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#e0f2f1] to-[#f5f5f5] p-1">
+                    <div key={question._id} className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#e0f2f1] to-[#f5f5f5] p-1 text-right">
                       <div className="absolute top-0 left-0 w-20 h-20 bg-[#009688]/10 rounded-br-full"></div>
                       <div className="absolute bottom-0 right-0 w-16 h-16 bg-[#009688]/10 rounded-tl-full"></div>
                       <div className="bg-white p-6 rounded-lg shadow-sm relative z-10">
-                        <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-6" dir="rtl">
-                          <span className="bg-[#009688] text-white px-3 py-1.5 rounded-full text-sm mt-3 md:mt-0 inline-block w-fit">
+                        <div className="flex flex-col md:flex-row-reverse md:justify-between md:items-center mb-6" dir="rtl">
+                          <span className="bg-[#009688] text-white px-3 py-1.5 rounded-full text-sm mt-3 md:mt-0 inline-block w-fit ml-auto">
                             سؤال {index + 1} من {poll.questions.length}
                           </span>
-                          <h3 className="font-bold text-xl text-right text-[#1e1e2d] flex items-center gap-2">
+                          <h3 className="font-bold text-xl text-[#1e1e2d] flex items-center gap-2  w-full">
                             <div className="bg-[#009688] text-white p-1.5 rounded-md flex-shrink-0">
                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                             </div>
@@ -593,7 +593,7 @@ function SurveyContent() {
                         <div className="mx-auto mb-6 w-[300px] h-[300px] relative">
                           {typeof window !== 'undefined' && <Image src="/fill.png" alt="Completion" fill className="object-contain" />}
                         </div>
-                        <h2 className="text-2xl font-bold text-[#009688] mb-4">تم الانتهاء</h2>
+                        <h2 className="text-2xl font-bold text-[#009688] mb-4 text-right">تم الانتهاء</h2>
                         <p className="text-gray-500 mb-6">شكراً لك على المشاركة</p>
                         <div className="w-32 h-32 mx-auto bg-[#e0f2f1] rounded-full flex items-center justify-center">
                           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#009688" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -605,17 +605,12 @@ function SurveyContent() {
                     ) : (
                       <div dir="rtl">
                         <div className="mb-8">
-                          <h2 className="text-2xl font-bold text-[#1e1e2d] mb-4 text-right flex items-center justify-end gap-2">
-                            <span>مراجعة المعلومات</span>
-                            <div className="bg-[#009688] text-white p-1.5 rounded-md">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                              </svg>
+                          <h2 className="text-2xl font-bold text-[#1e1e2d] mb-4 text-right flex items-center  gap-2">
+                            <div className="bg-[#009688] text-white p-1.5 rounded-md flex-shrink-0">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                             </div>
+                            <span>مراجعة المعلومات</span>
+                           
                           </h2>
                           <p className="text-gray-600 mb-6 text-right">يرجى مراجعة معلوماتك قبل الإرسال</p>
                           

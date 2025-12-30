@@ -147,7 +147,7 @@ export default function HomePage() {
                     onClick={() => handleStartPolling(poll._id)}
                     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
                   >
-                    <div className="p-6 border-l-4 border-[#008080]">
+                    <div className="p-6 border-l-4 border-[#008080] text-right">
                       <h3 className="text-xl font-semibold text-gray-800 mb-3">{poll.title}</h3>
                       <p className="text-gray-600 mb-4 min-h-[60px]">{poll.description}</p>
                       <div className="flex justify-between items-center">
