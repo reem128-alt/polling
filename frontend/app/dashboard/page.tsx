@@ -440,9 +440,7 @@ export default function Page() {
                             className={`px-6 py-3 text-right text-xs font-semibold text-[#1e1e2d] uppercase tracking-wider`}
                           >
                             <div className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${col.accent} px-3 py-1 shadow-sm`}>
-                              <span className="w-6 h-6 rounded-full bg-white text-[#009688] text-xs font-bold flex items-center justify-center">
-                                {index + 1}
-                              </span>
+                             
                               <span>{col.label}</span>
                             </div>
                           </th>
